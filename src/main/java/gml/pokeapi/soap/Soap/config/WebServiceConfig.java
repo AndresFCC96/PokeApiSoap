@@ -16,22 +16,23 @@ import org.springframework.xml.xsd.XsdSchema;
 @EnableWs
 public class WebServiceConfig extends WsConfigurerAdapter {
 
+
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(applicationContext);
         servlet.setTransformWsdlLocations(true);
-        return new ServletRegistrationBean<>(servlet, "/ws/*");
+        return new ServletRegistrationBean<>(servlet, "/soap-api/*");
     }
 
-    @Bean(name = "pokemons")
+    @Bean(name = "pokemon")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema pokemonSchema) {
-        DefaultWsdl11Definition wsdlDefinition = new DefaultWsdl11Definition();
-        wsdlDefinition.setPortTypeName("PokemonPortType");
-        wsdlDefinition.setLocationUri("/ws/pokemon");
-        wsdlDefinition.setTargetNamespace("http://gmlpt.com/pokemon");
-        wsdlDefinition.setSchema(pokemonSchema);
-        return wsdlDefinition;
+        DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+        wsdl11Definition.setPortTypeName("PokemonPort");
+        wsdl11Definition.setLocationUri("/soap-api");
+        wsdl11Definition.setTargetNamespace("http://gmlpt.com/pokemon");
+        wsdl11Definition.setSchema(pokemonSchema);
+        return wsdl11Definition;
     }
 
     @Bean

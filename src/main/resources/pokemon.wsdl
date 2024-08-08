@@ -1,0 +1,74 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://gmlpt.com/pokemon"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             targetNamespace="http://gmlpt.com/pokemon"
+             name="PokemonService">
+
+    <!-- Types -->
+    <types>
+        <xsd:schema targetNamespace="http://gmlpt.com/pokemon">
+            <xsd:element name="getPokemonListRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:int"/>
+                        <xsd:element name="limit" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getPokemonListResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="count" type="xsd:int"/>
+                        <xsd:element name="next" type="xsd:string"/>
+                        <xsd:element name="previous" type="xsd:string"/>
+                        <xsd:element name="results" type="tns:PokemonResult" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="PokemonResult">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="url" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+
+    <!-- Messages -->
+    <message name="getPokemonListRequest">
+        <part name="parameters" element="tns:getPokemonListRequest"/>
+    </message>
+    <message name="getPokemonListResponse">
+        <part name="parameters" element="tns:getPokemonListResponse"/>
+    </message>
+
+    <!-- PortType -->
+    <portType name="PokemonPort">
+        <operation name="getPokemonList">
+            <input message="tns:getPokemonListRequest"/>
+            <output message="tns:getPokemonListResponse"/>
+        </operation>
+    </portType>
+
+    <!-- Binding -->
+    <binding name="PokemonBinding" type="tns:PokemonPort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="getPokemonList">
+            <soap:operation soapAction="http://gmlpt.com/pokemon/getPokemonList"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Service -->
+    <service name="PokemonService">
+        <port name="PokemonPort" binding="tns:PokemonBinding">
+            <soap:address location="http://localhost:8080/soap-api"/>
+        </port>
+    </service>
+</definitions>
